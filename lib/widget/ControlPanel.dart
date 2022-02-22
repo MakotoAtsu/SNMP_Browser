@@ -1,10 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:dart_snmp/dart_snmp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:snmp_browser/store/AppState.dart';
+import 'package:redux/redux.dart';
 
 class ControlPanel extends StatelessWidget {
-  List<String> _snmpOperations = ["Get", "Get-Next", "Walk"];
+  late final Store<AppState> store;
+  final List<String> _snmpOperations = ["Get", "Get-Next", "Walk"];
 
   List<DropdownMenuItem<String>> _operationList() {
     var result = _snmpOperations
@@ -17,8 +22,16 @@ class ControlPanel extends StatelessWidget {
     return result;
   }
 
+  void querySnmp() async {
+    var session = await Snmp.createSession(InternetAddress("192.168.13.254"));
+    var response = await session.getNext(Oid.fromString("1.3.6.1.2"));
+    store.dispatch(AddQueryHistort(response));
+  }
+
   @override
   Widget build(BuildContext context) {
+    store = StoreProvider.of<AppState>(context);
+
     var container = Container(
       margin: const EdgeInsets.only(left: 10, top: 10, right: 10),
       child: Column(
@@ -46,10 +59,10 @@ class ControlPanel extends StatelessWidget {
             margin: const EdgeInsets.only(top: 30, bottom: 10),
             child: DropdownButton(
               items: _operationList(),
-              onChanged: (x) => log("Change Method"),
+              onChanged: (x) => {print("Change Method")},
             ),
           ),
-          ElevatedButton(onPressed: () => log("aaaa"), child: const Text("Go!"))
+          ElevatedButton(onPressed: () => querySnmp(), child: const Text("Go!"))
         ],
       ),
     );

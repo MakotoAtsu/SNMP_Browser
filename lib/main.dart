@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:snmp_browser/store/MainStore.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/widget/home.dart';
 import 'package:redux/redux.dart';
 
 void main() async {
-  runApp(const SNMPBrowser());
+  final appStore = Store<AppState>(appStateReducer, initialState: AppState());
+  runApp(SNMPBrowser(appStore));
 }
 
 class SNMPBrowser extends StatelessWidget {
-  const SNMPBrowser({Key? key}) : super(key: key);
+  final Store<AppState> appStore;
+  const SNMPBrowser(this.appStore, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    var app = MaterialApp(
       title: 'SNMP Browser',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -20,6 +23,9 @@ class SNMPBrowser extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: Home(),
     );
+
+    var storeProvider = StoreProvider(store: appStore, child: app);
+    return storeProvider;
   }
 }
 
