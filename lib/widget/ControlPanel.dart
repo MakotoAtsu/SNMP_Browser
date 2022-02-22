@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:redux/redux.dart';
+import 'package:snmp_browser/widget/GoButton.dart';
 
 class ControlPanel extends StatelessWidget {
   late final Store<AppState> store;
@@ -62,7 +63,7 @@ class ControlPanel extends StatelessWidget {
               onChanged: (x) => {print("Change Method")},
             ),
           ),
-          ElevatedButton(onPressed: () => querySnmp(), child: const Text("Go!"))
+          GoButton()
         ],
       ),
     );
