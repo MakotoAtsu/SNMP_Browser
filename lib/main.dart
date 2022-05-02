@@ -7,7 +7,7 @@ import 'package:redux/redux.dart';
 
 void main() async {
   final appStore = Store<AppState>(appStateReducer,
-      initialState: AppState(QueryTarget(), []));
+      initialState: AppState(0, QueryTarget(), []));
   runApp(SNMPBrowser(appStore));
 }
 

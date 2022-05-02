@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:snmp_browser/store/AppState.dart';
-import 'package:redux/redux.dart';
-import 'package:snmp_browser/widget/QueryPanel.dart';
+import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 
 class ControlPanel extends StatelessWidget {
   @override

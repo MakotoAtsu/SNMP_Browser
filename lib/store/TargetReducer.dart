@@ -38,9 +38,9 @@ class UpdateQueryTargetAction {
 }
 
 // Reducer
-QueryTarget UpdateTargetReducer(
+QueryTarget updateTargetReducer(
         QueryTarget oldTarget, UpdateQueryTargetAction action) =>
     action.target;
 
-Reducer<QueryTarget> QueryTargetReducer = combineReducers<QueryTarget>(
-    [TypedReducer<QueryTarget, UpdateQueryTargetAction>(UpdateTargetReducer)]);
+Reducer<QueryTarget> queryTargetReducer = combineReducers<QueryTarget>(
+    [TypedReducer<QueryTarget, UpdateQueryTargetAction>(updateTargetReducer)]);

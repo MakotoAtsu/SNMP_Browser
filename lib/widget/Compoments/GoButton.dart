@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:snmp_browser/store/HistoryReducer.dart';
-
-import '../store/AppState.dart';
+import '../../store/AppState.dart';
 
 class GoButton extends StatelessWidget {
   late final Store<AppState> store;
