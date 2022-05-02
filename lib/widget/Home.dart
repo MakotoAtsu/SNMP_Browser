@@ -1,27 +1,27 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:snmp_browser/widget/Pages/HistoryPage.dart';
+import 'package:snmp_browser/widget/Pages/HostsPage.dart';
 import '../store/AppState.dart';
-import 'Compoments/ButtomNavi.dart';
+import 'Compoments/BottomNavi.dart';
 
 class Home extends StatelessWidget {
-  AppBar? topAppBar() {
-    return AppBar(
-      title: const Text("SNMP MIB Browser"),
-    );
+  Widget getRenderPage(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return HostsPage();
+      case 2:
+        return HistoryPage();
+    }
+
+    return HostsPage();
   }
 
   @override
   Widget build(BuildContext context) {
     var body = StoreConnector<AppState, int>(
         converter: (store) => store.state.pageIndex,
-        builder: (context, pageIdx) => Scaffold(
-            appBar: topAppBar(),
-            backgroundColor: Color.fromARGB(255, 180, 219, 255),
-            // body: QueryHistory(),
-            body: Center(child: Text("Page : " + pageIdx.toString())),
-            bottomNavigationBar: ButtomNavi()));
-
+        builder: (context, pageIdx) => getRenderPage(pageIdx));
     return body;
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/PageIndexReducer.dart';
 
-class ButtomNavi extends StatelessWidget {
+class BottomNaviBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var store = StoreProvider.of<AppState>(context);

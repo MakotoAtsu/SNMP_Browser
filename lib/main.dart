@@ -24,7 +24,6 @@ class SNMPBrowser extends StatelessWidget {
       ),
       home: Home(),
     );
-
     var storeProvider = StoreProvider(store: appStore, child: app);
     return storeProvider;
   }
