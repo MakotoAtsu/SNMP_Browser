@@ -1,14 +1,5 @@
 import 'package:redux/redux.dart';
-
-// Model
-class QueryResult {
-  final String oid;
-  final int tag;
-  final String value;
-  String get type => "TypeName";
-
-  QueryResult(this.oid, this.tag, this.value);
-}
+import 'package:snmp_browser/model/QueryResult.dart';
 
 // Action
 class AppendQueryResultAction {

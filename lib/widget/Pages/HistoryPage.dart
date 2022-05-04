@@ -3,8 +3,9 @@ import 'package:dart_snmp/dart_snmp.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:snmp_browser/model/QueryResult.dart';
 import 'package:snmp_browser/store/AppState.dart';
-import 'package:snmp_browser/store/HistoryReducer.dart';
+import 'package:snmp_browser/store/reducer/HistoryReducer.dart';
 import 'package:snmp_browser/widget/Compoments/BottomNavi.dart';
 import 'package:snmp_browser/widget/Compoments/TopBar.dart';
 

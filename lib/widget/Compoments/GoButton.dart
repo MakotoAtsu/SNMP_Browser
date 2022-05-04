@@ -3,8 +3,9 @@ import 'package:dart_snmp/dart_snmp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:snmp_browser/model/QueryResult.dart';
 import 'package:snmp_browser/store/AppState.dart';
-import 'package:snmp_browser/store/HistoryReducer.dart';
+import 'package:snmp_browser/store/reducer/HistoryReducer.dart';
 
 class GoButton extends StatelessWidget {
   late final Store<AppState> store;

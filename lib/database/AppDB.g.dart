@@ -11,6 +11,7 @@ class Host extends DataClass implements Insertable<Host> {
   final int id;
   final String hostName;
   final String ip;
+  final int port;
   final int version;
   final String readCommunityString;
   final String writeCommunityString;
@@ -19,6 +20,7 @@ class Host extends DataClass implements Insertable<Host> {
       {required this.id,
       required this.hostName,
       required this.ip,
+      required this.port,
       required this.version,
       required this.readCommunityString,
       required this.writeCommunityString,
@@ -32,6 +34,8 @@ class Host extends DataClass implements Insertable<Host> {
           .mapFromDatabaseResponse(data['${effectivePrefix}host_name'])!,
       ip: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}ip'])!,
+      port: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}port'])!,
       version: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
       readCommunityString: const StringType().mapFromDatabaseResponse(
@@ -48,6 +52,7 @@ class Host extends DataClass implements Insertable<Host> {
     map['id'] = Variable<int>(id);
     map['host_name'] = Variable<String>(hostName);
     map['ip'] = Variable<String>(ip);
+    map['port'] = Variable<int>(port);
     map['version'] = Variable<int>(version);
     map['read_community_string'] = Variable<String>(readCommunityString);
     map['write_community_string'] = Variable<String>(writeCommunityString);
@@ -60,6 +65,7 @@ class Host extends DataClass implements Insertable<Host> {
       id: Value(id),
       hostName: Value(hostName),
       ip: Value(ip),
+      port: Value(port),
       version: Value(version),
       readCommunityString: Value(readCommunityString),
       writeCommunityString: Value(writeCommunityString),
@@ -74,6 +80,7 @@ class Host extends DataClass implements Insertable<Host> {
       id: serializer.fromJson<int>(json['id']),
       hostName: serializer.fromJson<String>(json['hostName']),
       ip: serializer.fromJson<String>(json['ip']),
+      port: serializer.fromJson<int>(json['port']),
       version: serializer.fromJson<int>(json['version']),
       readCommunityString:
           serializer.fromJson<String>(json['readCommunityString']),
@@ -89,6 +96,7 @@ class Host extends DataClass implements Insertable<Host> {
       'id': serializer.toJson<int>(id),
       'hostName': serializer.toJson<String>(hostName),
       'ip': serializer.toJson<String>(ip),
+      'port': serializer.toJson<int>(port),
       'version': serializer.toJson<int>(version),
       'readCommunityString': serializer.toJson<String>(readCommunityString),
       'writeCommunityString': serializer.toJson<String>(writeCommunityString),
@@ -100,6 +108,7 @@ class Host extends DataClass implements Insertable<Host> {
           {int? id,
           String? hostName,
           String? ip,
+          int? port,
           int? version,
           String? readCommunityString,
           String? writeCommunityString,
@@ -108,6 +117,7 @@ class Host extends DataClass implements Insertable<Host> {
         id: id ?? this.id,
         hostName: hostName ?? this.hostName,
         ip: ip ?? this.ip,
+        port: port ?? this.port,
         version: version ?? this.version,
         readCommunityString: readCommunityString ?? this.readCommunityString,
         writeCommunityString: writeCommunityString ?? this.writeCommunityString,
@@ -119,6 +129,7 @@ class Host extends DataClass implements Insertable<Host> {
           ..write('id: $id, ')
           ..write('hostName: $hostName, ')
           ..write('ip: $ip, ')
+          ..write('port: $port, ')
           ..write('version: $version, ')
           ..write('readCommunityString: $readCommunityString, ')
           ..write('writeCommunityString: $writeCommunityString, ')
@@ -128,7 +139,7 @@ class Host extends DataClass implements Insertable<Host> {
   }
 
   @override
-  int get hashCode => Object.hash(id, hostName, ip, version,
+  int get hashCode => Object.hash(id, hostName, ip, port, version,
       readCommunityString, writeCommunityString, note);
   @override
   bool operator ==(Object other) =>
@@ -137,6 +148,7 @@ class Host extends DataClass implements Insertable<Host> {
           other.id == this.id &&
           other.hostName == this.hostName &&
           other.ip == this.ip &&
+          other.port == this.port &&
           other.version == this.version &&
           other.readCommunityString == this.readCommunityString &&
           other.writeCommunityString == this.writeCommunityString &&
@@ -147,6 +159,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
   final Value<int> id;
   final Value<String> hostName;
   final Value<String> ip;
+  final Value<int> port;
   final Value<int> version;
   final Value<String> readCommunityString;
   final Value<String> writeCommunityString;
@@ -155,6 +168,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
     this.id = const Value.absent(),
     this.hostName = const Value.absent(),
     this.ip = const Value.absent(),
+    this.port = const Value.absent(),
     this.version = const Value.absent(),
     this.readCommunityString = const Value.absent(),
     this.writeCommunityString = const Value.absent(),
@@ -164,18 +178,18 @@ class HostsCompanion extends UpdateCompanion<Host> {
     this.id = const Value.absent(),
     required String hostName,
     required String ip,
+    this.port = const Value.absent(),
     this.version = const Value.absent(),
     this.readCommunityString = const Value.absent(),
-    required String writeCommunityString,
-    required String note,
+    this.writeCommunityString = const Value.absent(),
+    this.note = const Value.absent(),
   })  : hostName = Value(hostName),
-        ip = Value(ip),
-        writeCommunityString = Value(writeCommunityString),
-        note = Value(note);
+        ip = Value(ip);
   static Insertable<Host> custom({
     Expression<int>? id,
     Expression<String>? hostName,
     Expression<String>? ip,
+    Expression<int>? port,
     Expression<int>? version,
     Expression<String>? readCommunityString,
     Expression<String>? writeCommunityString,
@@ -185,6 +199,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
       if (id != null) 'id': id,
       if (hostName != null) 'host_name': hostName,
       if (ip != null) 'ip': ip,
+      if (port != null) 'port': port,
       if (version != null) 'version': version,
       if (readCommunityString != null)
         'read_community_string': readCommunityString,
@@ -198,6 +213,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
       {Value<int>? id,
       Value<String>? hostName,
       Value<String>? ip,
+      Value<int>? port,
       Value<int>? version,
       Value<String>? readCommunityString,
       Value<String>? writeCommunityString,
@@ -206,6 +222,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
       id: id ?? this.id,
       hostName: hostName ?? this.hostName,
       ip: ip ?? this.ip,
+      port: port ?? this.port,
       version: version ?? this.version,
       readCommunityString: readCommunityString ?? this.readCommunityString,
       writeCommunityString: writeCommunityString ?? this.writeCommunityString,
@@ -224,6 +241,9 @@ class HostsCompanion extends UpdateCompanion<Host> {
     }
     if (ip.present) {
       map['ip'] = Variable<String>(ip.value);
+    }
+    if (port.present) {
+      map['port'] = Variable<int>(port.value);
     }
     if (version.present) {
       map['version'] = Variable<int>(version.value);
@@ -248,6 +268,7 @@ class HostsCompanion extends UpdateCompanion<Host> {
           ..write('id: $id, ')
           ..write('hostName: $hostName, ')
           ..write('ip: $ip, ')
+          ..write('port: $port, ')
           ..write('version: $version, ')
           ..write('readCommunityString: $readCommunityString, ')
           ..write('writeCommunityString: $writeCommunityString, ')
@@ -273,15 +294,19 @@ class $HostsTable extends Hosts with TableInfo<$HostsTable, Host> {
   @override
   late final GeneratedColumn<String?> hostName = GeneratedColumn<String?>(
       'host_name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
-      type: const StringType(),
-      requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _ipMeta = const VerificationMeta('ip');
   @override
   late final GeneratedColumn<String?> ip = GeneratedColumn<String?>(
       'ip', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _portMeta = const VerificationMeta('port');
+  @override
+  late final GeneratedColumn<int?> port = GeneratedColumn<int?>(
+      'port', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(161));
   final VerificationMeta _versionMeta = const VerificationMeta('version');
   @override
   late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
@@ -302,17 +327,22 @@ class $HostsTable extends Hosts with TableInfo<$HostsTable, Host> {
   @override
   late final GeneratedColumn<String?> writeCommunityString =
       GeneratedColumn<String?>('write_community_string', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+          type: const StringType(),
+          requiredDuringInsert: false,
+          defaultValue: const Constant(''));
   final VerificationMeta _noteMeta = const VerificationMeta('note');
   @override
   late final GeneratedColumn<String?> note = GeneratedColumn<String?>(
       'note', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: const Constant(''));
   @override
   List<GeneratedColumn> get $columns => [
         id,
         hostName,
         ip,
+        port,
         version,
         readCommunityString,
         writeCommunityString,
@@ -341,6 +371,10 @@ class $HostsTable extends Hosts with TableInfo<$HostsTable, Host> {
     } else if (isInserting) {
       context.missing(_ipMeta);
     }
+    if (data.containsKey('port')) {
+      context.handle(
+          _portMeta, port.isAcceptableOrUnknown(data['port']!, _portMeta));
+    }
     if (data.containsKey('version')) {
       context.handle(_versionMeta,
           version.isAcceptableOrUnknown(data['version']!, _versionMeta));
@@ -356,14 +390,10 @@ class $HostsTable extends Hosts with TableInfo<$HostsTable, Host> {
           _writeCommunityStringMeta,
           writeCommunityString.isAcceptableOrUnknown(
               data['write_community_string']!, _writeCommunityStringMeta));
-    } else if (isInserting) {
-      context.missing(_writeCommunityStringMeta);
     }
     if (data.containsKey('note')) {
       context.handle(
           _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
-    } else if (isInserting) {
-      context.missing(_noteMeta);
     }
     return context;
   }

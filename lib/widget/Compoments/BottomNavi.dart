@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/store/AppState.dart';
-import 'package:snmp_browser/store/PageIndexReducer.dart';
+import 'package:snmp_browser/store/reducer/PageIndexReducer.dart';
 
 class BottomNaviBar extends StatelessWidget {
   @override
