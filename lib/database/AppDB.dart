@@ -15,7 +15,8 @@ class AppDB extends _$AppDB {
   int get schemaVersion => 1;
 
   Future<List<Host>> getAllHosts() => select(hosts).get();
-  // Future getHostById(int id) => select(hosts).where((x) => x.id.equals(id))
+  Future<Host?> getHostById(int id) =>
+      (select(hosts)..where((x) => x.id.equals(id))).getSingleOrNull();
   Future createHost(HostsCompanion entity) => into(hosts).insert(entity);
   Future updateHost(Host entity) => update(hosts).replace(entity);
   Future deleteHost(Host entity) => delete(hosts).delete(entity);
