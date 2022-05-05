@@ -1,8 +1,8 @@
-class QueryResult {
+class QueryResultModel {
   final String oid;
   final int tag;
   final String value;
   String get type => "TypeName";
 
-  QueryResult(this.oid, this.tag, this.value);
+  QueryResultModel(this.oid, this.tag, this.value);
 }

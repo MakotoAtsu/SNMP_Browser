@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/database/AppDB.dart';
-import 'package:snmp_browser/model/SnmpHost.dart';
+import 'package:snmp_browser/model/HostModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/StoredHostsReducer.dart';
 import 'package:snmp_browser/widget/Compoments/BottomNavi.dart';
@@ -22,7 +22,7 @@ class HostsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var body = StoreConnector<AppState, List<SnmpHost>>(
+    var body = StoreConnector<AppState, List<HostModel>>(
         converter: (store) => store.state.storedHosts,
         onInit: (store) => store.dispatch(FetchStoredHostAction()),
         builder: (context, storedHosts) => Scaffold(

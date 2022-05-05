@@ -1,16 +1,16 @@
 import 'package:redux/redux.dart';
-import 'package:snmp_browser/model/SnmpHost.dart';
+import 'package:snmp_browser/model/HostModel.dart';
 
 // Action
 class UpdateQueryTargetAction {
-  final SnmpHost target;
+  final HostModel target;
   UpdateQueryTargetAction(this.target);
 }
 
 // Reducer
-SnmpHost updateTargetReducer(
-        SnmpHost oldTarget, UpdateQueryTargetAction action) =>
+HostModel updateTargetReducer(
+        HostModel oldTarget, UpdateQueryTargetAction action) =>
     action.target;
 
-Reducer<SnmpHost> queryTargetReducer = combineReducers<SnmpHost>(
-    [TypedReducer<SnmpHost, UpdateQueryTargetAction>(updateTargetReducer)]);
+Reducer<HostModel> queryTargetReducer = combineReducers<HostModel>(
+    [TypedReducer<HostModel, UpdateQueryTargetAction>(updateTargetReducer)]);

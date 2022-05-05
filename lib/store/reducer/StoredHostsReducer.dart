@@ -1,17 +1,17 @@
 import 'package:redux/redux.dart';
-import 'package:snmp_browser/model/SnmpHost.dart';
+import 'package:snmp_browser/model/HostModel.dart';
 
 // Action
 class FetchStoredHostAction {
-  List<SnmpHost> storedHosts = [];
+  List<HostModel> storedHosts = [];
 }
 
 // Reducer
-List<SnmpHost> fetchStoredHostsReducer(
-        List<SnmpHost> oldList, FetchStoredHostAction action) =>
+List<HostModel> fetchStoredHostsReducer(
+        List<HostModel> oldList, FetchStoredHostAction action) =>
     action.storedHosts;
 
 // Combinen Reducer
-Reducer<List<SnmpHost>> storeHostsReducer = combineReducers<List<SnmpHost>>([
-  TypedReducer<List<SnmpHost>, FetchStoredHostAction>(fetchStoredHostsReducer)
+Reducer<List<HostModel>> storeHostsReducer = combineReducers<List<HostModel>>([
+  TypedReducer<List<HostModel>, FetchStoredHostAction>(fetchStoredHostsReducer)
 ]);

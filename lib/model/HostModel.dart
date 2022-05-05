@@ -2,7 +2,7 @@ import 'dart:io';
 
 enum SnmpVersion { v1, v2c, v3 }
 
-class SnmpHost {
+class HostModel {
   InternetAddress? ip;
   int port = 161;
   SnmpVersion version = SnmpVersion.v2c;
@@ -10,9 +10,9 @@ class SnmpHost {
   String writeCommunityString = '';
   String note = '';
 
-  SnmpHost();
+  HostModel();
 
-  SnmpHost clone() => SnmpHost.fromJson(toJson());
+  HostModel clone() => HostModel.fromJson(toJson());
 
   Map<String, dynamic> toJson() => {
         'ip': ip,
@@ -22,7 +22,7 @@ class SnmpHost {
         'writeCommunityString': writeCommunityString,
       };
 
-  SnmpHost.fromJson(Map<String, dynamic> json)
+  HostModel.fromJson(Map<String, dynamic> json)
       : ip = json['ip'],
         port = json['port'],
         version = json['version'],

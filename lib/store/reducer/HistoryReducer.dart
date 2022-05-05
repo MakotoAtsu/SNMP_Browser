@@ -1,9 +1,9 @@
 import 'package:redux/redux.dart';
-import 'package:snmp_browser/model/QueryResult.dart';
+import 'package:snmp_browser/model/QueryResultModel.dart';
 
 // Action
 class AppendQueryResultAction {
-  final QueryResult item;
+  final QueryResultModel item;
   AppendQueryResultAction(this.item);
 }
 
@@ -13,24 +13,27 @@ class RemoveQueryResultAction {
 }
 
 // Action Reducer
-List<QueryResult> appendQueryReducer(
-    List<QueryResult> oldList, AppendQueryResultAction action) {
-  List<QueryResult> newList = List.from(oldList);
+List<QueryResultModel> appendQueryReducer(
+    List<QueryResultModel> oldList, AppendQueryResultAction action) {
+  List<QueryResultModel> newList = List.from(oldList);
   newList.add(action.item);
   return newList;
 }
 
-List<QueryResult> removeQueryReducer(
-    List<QueryResult> oldList, RemoveQueryResultAction action) {
-  List<QueryResult> newList = List.from(oldList);
+List<QueryResultModel> removeQueryReducer(
+    List<QueryResultModel> oldList, RemoveQueryResultAction action) {
+  List<QueryResultModel> newList = List.from(oldList);
   newList.removeAt(action.index);
   return newList;
 }
 
 // Combine Reducer
-Reducer<List<QueryResult>> historyReducer = combineReducers<List<QueryResult>>([
-  TypedReducer<List<QueryResult>, AppendQueryResultAction>(appendQueryReducer),
-  TypedReducer<List<QueryResult>, RemoveQueryResultAction>(removeQueryReducer)
+Reducer<List<QueryResultModel>> historyReducer =
+    combineReducers<List<QueryResultModel>>([
+  TypedReducer<List<QueryResultModel>, AppendQueryResultAction>(
+      appendQueryReducer),
+  TypedReducer<List<QueryResultModel>, RemoveQueryResultAction>(
+      removeQueryReducer)
 ]);
 
 // List<QueryResult> queryResultReducerOld(List<QueryResult> oldList, action) {
