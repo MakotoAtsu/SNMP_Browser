@@ -6,10 +6,13 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/model/QueryResultModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/HistoryReducer.dart';
-import 'package:snmp_browser/widget/Compoments/BottomNavi.dart';
+import 'package:snmp_browser/widget/Compoments/BottomNaviBar.dart';
 import 'package:snmp_browser/widget/Compoments/TopBar.dart';
 
 class HistoryPage extends StatelessWidget {
+  static const String pageName = 'Query History';
+  static const String pageRoute = '/History';
+
   late final Store<AppState> store;
 
   ListView _renderList(List<QueryResultModel> history) {

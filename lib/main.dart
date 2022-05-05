@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/middleware/fetchStoredHostsMiddleware.dart';
-import 'package:snmp_browser/widget/home.dart';
+import 'package:snmp_browser/widget/Pages/CreateAndEditHostPage.dart';
+import 'package:snmp_browser/widget/Pages/HistoryPage.dart';
+import 'package:snmp_browser/widget/Pages/HostListPage.dart';
+import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 import 'package:redux/redux.dart';
 
 void main() async {
@@ -15,7 +18,14 @@ void main() async {
 
 class SNMPBrowser extends StatelessWidget {
   final Store<AppState> appStore;
-  const SNMPBrowser(this.appStore, {Key? key}) : super(key: key);
+  SNMPBrowser(this.appStore, {Key? key}) : super(key: key);
+
+  final Map<String, WidgetBuilder> _routerSetting = {
+    HostListPage.pageRoute: (context) => HostListPage(),
+    QueryPage.pageRoute: (context) => QueryPage(),
+    HistoryPage.pageRoute: (context) => HistoryPage(),
+    CreateAndEditHostPage.pageRoute: (context) => CreateAndEditHostPage()
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +34,10 @@ class SNMPBrowser extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Home(),
+      initialRoute: HostListPage.pageRoute,
+      routes: _routerSetting,
     );
+
     var storeProvider = StoreProvider(store: appStore, child: app);
     return storeProvider;
   }
