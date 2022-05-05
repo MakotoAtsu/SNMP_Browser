@@ -45,6 +45,15 @@ class DeleteHostAction extends AsyncAction {
   }
 }
 
+class CreateHostAction extends AsyncAction {
+  final HostModel host;
+
+  CreateHostAction(this.host,
+      {Function? onExecuting, Function? onComplete, Function? onError})
+      : super(
+            onExecuting: onExecuting, onComplete: onComplete, onError: onError);
+}
+
 // Reducer
 List<HostModel> fetchHostsReducer(
         List<HostModel> oldList, FetchHostsAction action) =>
@@ -61,6 +70,10 @@ List<HostModel> updateHostReducer(
   }
 }
 
+List<HostModel> createHostReducer(
+        List<HostModel> oldList, CreateHostAction action) =>
+    List<HostModel>.from(oldList)..add(action.host);
+
 List<HostModel> deleteHostReducer(
         List<HostModel> oldList, DeleteHostAction action) =>
     List<HostModel>.from(oldList)..removeWhere((h) => h.id == action.hostId);
@@ -70,4 +83,5 @@ Reducer<List<HostModel>> hostsReducer = combineReducers<List<HostModel>>([
   TypedReducer<List<HostModel>, FetchHostsAction>(fetchHostsReducer),
   TypedReducer<List<HostModel>, UpdateHostAction>(updateHostReducer),
   TypedReducer<List<HostModel>, DeleteHostAction>(deleteHostReducer),
+  TypedReducer<List<HostModel>, CreateHostAction>(createHostReducer),
 ]);

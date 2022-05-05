@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:drift/drift.dart';
 import 'package:snmp_browser/database/AppDB.dart';
 import 'package:snmp_browser/model/HostModel.dart';
 
@@ -43,4 +44,17 @@ class HostService {
   static Future deleteHostById(int hostId) => AppDB().deleteHostById(hostId);
 
   static Future deleteHost(HostModel model) => deleteHostById(model.id!);
+
+  static Future<int> createHost(HostModel model) async {
+    var host = HostsCompanion(
+        hostName: Value(model.name!),
+        ip: Value(model.ip!.address),
+        port: Value(model.port),
+        readCommunityString: Value(model.readCommunityString),
+        writeCommunityString: Value(model.writeCommunityString),
+        version: Value(model.version.index),
+        note: Value(model.note));
+
+    return await AppDB().createHost(host);
+  }
 }

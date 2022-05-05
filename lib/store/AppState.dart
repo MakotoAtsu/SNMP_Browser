@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:snmp_browser/model/QueryResultModel.dart';
 import 'package:snmp_browser/model/HostModel.dart';
+import 'package:snmp_browser/store/middleware/CreateHostMiddleware.dart';
 import 'package:snmp_browser/store/middleware/DeleteHostMiddleware.dart';
 import 'package:snmp_browser/store/middleware/UpdateHostMiddleware.dart';
 import 'package:snmp_browser/store/reducer/HostsReducer.dart';
@@ -22,6 +23,7 @@ List<Middleware<AppState>> getAllMiddleware = [
   FetchHostsMiddleware(),
   DeleteHostMiddleware(),
   UpdateHostMiddleware(),
+  CreateHostMiddleware(),
 ];
 
 // MainReducer
