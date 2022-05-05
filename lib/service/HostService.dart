@@ -10,6 +10,7 @@ class HostService {
 
     var hostsModel = allHosts.map((db) {
       var h = HostModel();
+      h.id = db.id;
       h.name = db.hostName;
       h.ip = InternetAddress.tryParse(db.ip);
       h.port = db.port;
@@ -24,4 +25,22 @@ class HostService {
   }
 
   static Future<Host?> getHostFromDB(int id) => AppDB().getHostById(id);
+
+  static Future updateHost(HostModel hostModel) async {
+    var host = Host(
+        id: hostModel.id!,
+        hostName: hostModel.name!,
+        ip: hostModel.ip!.address,
+        port: hostModel.port,
+        version: hostModel.version.index,
+        readCommunityString: hostModel.readCommunityString,
+        writeCommunityString: hostModel.writeCommunityString,
+        note: hostModel.note);
+
+    await AppDB().updateHost(host);
+  }
+
+  static Future deleteHostById(int hostId) => AppDB().deleteHostById(hostId);
+
+  static Future deleteHost(HostModel model) => deleteHostById(model.id!);
 }

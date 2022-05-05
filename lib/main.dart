@@ -7,12 +7,9 @@ import 'package:snmp_browser/widget/Pages/HostListPage.dart';
 import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 import 'package:redux/redux.dart';
 
-import 'store/middleware/FetchHostsMiddleware.dart';
-
 void main() async {
-  final List<Middleware<AppState>> middlewares = [FetchHostsMiddleware()];
   final appStore = Store<AppState>(appStateReducer,
-      initialState: AppState.Init(), middleware: middlewares);
+      initialState: AppState.init(), middleware: getAllMiddleware);
 
   runApp(SNMPBrowser(appStore));
 }

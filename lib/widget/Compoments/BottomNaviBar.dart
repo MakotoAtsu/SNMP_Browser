@@ -39,8 +39,10 @@ class BottomNaviBar extends StatelessWidget {
         if (newIdx == currentPageIndex) return;
         var newRoute = _naviItems.keys.toList()[newIdx];
 
-        if (newIdx == 1 &&
-            !StoreProvider.of<AppState>(context).state.queryTarget.isValid) {
+        var canQuery =
+            !StoreProvider.of<AppState>(context).state.queryTarget.isValid;
+
+        if (newRoute == QueryPage.pageRoute && canQuery) {
           return;
         }
         Navigator.of(context).pushReplacementNamed(newRoute);

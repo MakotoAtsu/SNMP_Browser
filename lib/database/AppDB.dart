@@ -19,7 +19,9 @@ class AppDB extends _$AppDB {
       (select(hosts)..where((x) => x.id.equals(id))).getSingleOrNull();
   Future createHost(HostsCompanion entity) => into(hosts).insert(entity);
   Future updateHost(Host entity) => update(hosts).replace(entity);
-  Future deleteHost(Host entity) => delete(hosts).delete(entity);
+  // Future deleteHost(Host entity) => delete(hosts).delete(entity);
+  Future deleteHostById(int id) =>
+      (delete(hosts)..where((h) => h.id.equals(id))).go();
 }
 
 LazyDatabase _openConnection() => LazyDatabase(() async {

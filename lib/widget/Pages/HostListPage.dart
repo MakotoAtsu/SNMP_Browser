@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:snmp_browser/model/HostModel.dart';
 import 'package:snmp_browser/service/HostService.dart';
+import 'package:snmp_browser/store/AppState.dart';
+import 'package:snmp_browser/store/reducer/HostsReducer.dart';
+import 'package:snmp_browser/store/reducer/TargetReducer.dart';
 import 'package:snmp_browser/widget/Compoments/BottomNaviBar.dart';
 import 'package:snmp_browser/widget/Compoments/LoadingIcon.dart';
 import 'package:snmp_browser/widget/Pages/CreateAndEditHostPage.dart';
 
-class HostListPage extends StatelessWidget {
+class HostListPage extends StatefulWidget {
   static const String pageName = 'Hosts';
   static const String pageRoute = '/Hosts';
+
+  @override
+  State<StatefulWidget> createState() => _HostListPage();
+}
+
+class _HostListPage extends State<HostListPage> {
+  late Store<AppState> _store;
+  late NavigatorState _navigator;
+  bool isLoading = false;
 
   Widget _createCard(HostModel model) {
     var hostIP = Text(model.ip!.address);
@@ -16,88 +30,85 @@ class HostListPage extends StatelessWidget {
     var version = Text('SNMP version : ' + model.version.toString());
 
     var listTitle = ListTile(
-      onTap: () {
-        var aa = 'ccc';
-      },
-      leading: const Icon(Icons.circle),
-      title: hostName,
-      subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          hostIP,
-          hostPort,
-          version,
-        ],
-      ),
-    );
+        onTap: () {
+          _store.dispatch(UpdateQueryTargetAction(model));
+        },
+        leading: const Icon(Icons.circle),
+        title: hostName,
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            hostIP,
+            // hostPort,
+            // version,
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                _navigator.pushNamed(CreateAndEditHostPage.pageRoute);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () => _store.dispatch(DeleteHostAction(model.id!)),
+            ),
+          ],
+        ));
 
     var card = Card(child: listTitle);
 
     return card;
   }
 
-  Widget _getCard() {
-    return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: const <Widget>[
-          ListTile(
-            leading: Icon(Icons.album),
-            title: Text('The Enchanted Nightingale'),
-            subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-          ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: <Widget>[
-          //     TextButton(
-          //       child: const Text('BUY TICKETS'),
-          //       onPressed: () {/* ... */},
-          //     ),
-          //     const SizedBox(width: 8),
-          //     TextButton(
-          //       child: const Text('LISTEN'),
-          //       onPressed: () {/* ... */},
-          //     ),
-          //     const SizedBox(width: 8),
-          //   ],
-          // ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    var builder = FutureBuilder<List<HostModel>>(
-      future: HostService.getAllHostFromDB(),
-      builder: (context, result) {
-        if (result.hasData) {
-          var hostList = ListView(
-              children: result.data!.map((h) => _createCard(h)).toList());
-          return hostList;
+    _navigator = Navigator.of(context);
+    _store = StoreProvider.of<AppState>(context);
+
+    var connector = StoreConnector<AppState, List<HostModel>>(
+      converter: (store) => store.state.hosts,
+      onInit: (store) {
+        isLoading = true;
+        store.dispatch(FetchHostsAction(
+          onComplete: () {
+            isLoading = false;
+          },
+        ));
+      },
+      builder: (context, hosts) {
+        Widget body;
+        if (isLoading) {
+          body = LoadingIcon();
         } else {
-          return LoadingIcon();
+          body = ListView(children: hosts.map((h) => _createCard(h)).toList());
         }
+
+        var sca = Scaffold(
+          appBar: AppBar(
+            title: const Center(child: Text('Hosts')),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                tooltip: 'Create',
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(CreateAndEditHostPage.pageRoute);
+                },
+              )
+            ],
+          ),
+          body: body,
+          bottomNavigationBar: BottomNaviBar(),
+        );
+
+        return sca;
       },
     );
 
-    var body = Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('Hosts')),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Create',
-            onPressed: () {
-              Navigator.of(context).pushNamed(CreateAndEditHostPage.pageRoute);
-            },
-          )
-        ],
-      ),
-      body: builder,
-      bottomNavigationBar: BottomNaviBar(),
-    );
-
-    return body;
+    return connector;
   }
 }
