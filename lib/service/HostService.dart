@@ -1,18 +1,15 @@
-// ignore_for_file: file_names
-
 import 'dart:io';
-
 import 'package:snmp_browser/database/AppDB.dart';
-import 'package:snmp_browser/model/SnmpHost.dart';
+import 'package:snmp_browser/model/HostModel.dart';
 
 class HostService {
-  static Future<List<SnmpHost>> getAllHostFromDB() async {
+  static Future<List<HostModel>> getAllHostFromDB() async {
     await Future.delayed(const Duration(seconds: 3));
 
     var allHosts = await AppDB().getAllHosts();
 
     var hostsModel = allHosts.map((db) {
-      var h = SnmpHost();
+      var h = HostModel();
       h.ip = InternetAddress.tryParse(db.ip);
       h.port = db.port;
       h.version = SnmpVersion.values[db.version];

@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:redux/redux.dart';
 import 'package:snmp_browser/database/AppDB.dart';
-import 'package:snmp_browser/model/SnmpHost.dart';
+import 'package:snmp_browser/model/HostModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/StoredHostsReducer.dart';
 
@@ -13,7 +12,7 @@ class FetchStoredHostsMiddleware extends MiddlewareClass<AppState> {
       var allStoredHosts = await AppDB().getAllHosts();
 
       var data = allStoredHosts.map((db) {
-        var h = SnmpHost();
+        var h = HostModel();
         h.ip = InternetAddress.tryParse(db.ip);
         h.port = db.port;
         h.version = SnmpVersion.values[db.version];
