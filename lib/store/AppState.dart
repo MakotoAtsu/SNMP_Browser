@@ -1,6 +1,6 @@
 import 'package:snmp_browser/model/QueryResultModel.dart';
 import 'package:snmp_browser/model/HostModel.dart';
-import 'package:snmp_browser/store/reducer/StoredHostsReducer.dart';
+import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 import 'reducer/HistoryReducer.dart';
 import 'reducer/TargetReducer.dart';
 
@@ -16,6 +16,6 @@ class AppState {
 
 // MainReducer
 AppState appStateReducer(AppState oldState, action) => AppState(
-    storeHostsReducer(oldState.storedHosts, action),
+    hostsReducer(oldState.storedHosts, action),
     queryTargetReducer(oldState.queryTarget, action),
     historyReducer(oldState.histories, action));

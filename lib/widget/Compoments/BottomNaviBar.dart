@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/widget/Pages/HistoryPage.dart';
 import 'package:snmp_browser/widget/Pages/HostListPage.dart';
 import 'package:snmp_browser/widget/Pages/QueryPage.dart';
@@ -35,8 +37,12 @@ class BottomNaviBar extends StatelessWidget {
       selectedItemColor: Colors.amber[800],
       onTap: (newIdx) {
         if (newIdx == currentPageIndex) return;
-
         var newRoute = _naviItems.keys.toList()[newIdx];
+
+        if (newIdx == 1 &&
+            !StoreProvider.of<AppState>(context).state.queryTarget.isValid) {
+          return;
+        }
         Navigator.of(context).pushReplacementNamed(newRoute);
       },
     );

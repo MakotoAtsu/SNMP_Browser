@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/store/AppState.dart';
-import 'package:snmp_browser/store/middleware/fetchStoredHostsMiddleware.dart';
 import 'package:snmp_browser/widget/Pages/CreateAndEditHostPage.dart';
 import 'package:snmp_browser/widget/Pages/HistoryPage.dart';
 import 'package:snmp_browser/widget/Pages/HostListPage.dart';
 import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 import 'package:redux/redux.dart';
 
+import 'store/middleware/FetchHostsMiddleware.dart';
+
 void main() async {
-  final List<Middleware<AppState>> middlewares = [FetchStoredHostsMiddleware()];
+  final List<Middleware<AppState>> middlewares = [FetchHostsMiddleware()];
   final appStore = Store<AppState>(appStateReducer,
       initialState: AppState.Init(), middleware: middlewares);
 

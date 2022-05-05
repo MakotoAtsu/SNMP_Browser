@@ -10,6 +10,7 @@ class HostService {
 
     var hostsModel = allHosts.map((db) {
       var h = HostModel();
+      h.name = db.hostName;
       h.ip = InternetAddress.tryParse(db.ip);
       h.port = db.port;
       h.version = SnmpVersion.values[db.version];

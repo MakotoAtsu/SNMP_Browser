@@ -3,16 +3,17 @@ import 'package:redux/redux.dart';
 import 'package:snmp_browser/database/AppDB.dart';
 import 'package:snmp_browser/model/HostModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
-import 'package:snmp_browser/store/reducer/StoredHostsReducer.dart';
+import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 
-class FetchStoredHostsMiddleware extends MiddlewareClass<AppState> {
+class FetchHostsMiddleware extends MiddlewareClass<AppState> {
   @override
   call(Store<AppState> store, action, NextDispatcher next) async {
-    if (action is FetchStoredHostAction) {
-      var allStoredHosts = await AppDB().getAllHosts();
+    if (action is FetchHostsAction) {
+      var allHosts = await AppDB().getAllHosts();
 
-      var data = allStoredHosts.map((db) {
+      var data = allHosts.map((db) {
         var h = HostModel();
+        h.id = db.id;
         h.ip = InternetAddress.tryParse(db.ip);
         h.port = db.port;
         h.version = SnmpVersion.values[db.version];
@@ -24,6 +25,7 @@ class FetchStoredHostsMiddleware extends MiddlewareClass<AppState> {
 
       action.storedHosts = data;
     }
+
     next(action);
   }
 }
