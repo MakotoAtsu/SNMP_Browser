@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:snmp_browser/model/HostModel.dart';
-import 'package:snmp_browser/service/HostService.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 import 'package:snmp_browser/store/reducer/TargetReducer.dart';
@@ -49,7 +48,8 @@ class _HostListPage extends State<HostListPage> {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                _navigator.pushNamed(CreateAndEditHostPage.pageRoute);
+                _navigator.pushNamed(CreateAndEditHostPage.pageRoute,
+                    arguments: {'hostId': model.id});
               },
             ),
             IconButton(

@@ -27,7 +27,7 @@ class HostService {
 
   static Future<Host?> getHostFromDB(int id) => AppDB().getHostById(id);
 
-  static Future updateHost(HostModel hostModel) async {
+  static Future<bool> updateHost(HostModel hostModel) async {
     var host = Host(
         id: hostModel.id!,
         hostName: hostModel.name!,
@@ -38,7 +38,7 @@ class HostService {
         writeCommunityString: hostModel.writeCommunityString,
         note: hostModel.note);
 
-    await AppDB().updateHost(host);
+    return await AppDB().updateHost(host);
   }
 
   static Future deleteHostById(int hostId) => AppDB().deleteHostById(hostId);
