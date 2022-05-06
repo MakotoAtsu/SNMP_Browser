@@ -6,6 +6,7 @@ import 'package:snmp_browser/model/HostModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 import 'package:snmp_browser/widget/Compoments/InputField.dart';
+import 'package:snmp_browser/widget/Compoments/WidgetTool.dart';
 
 class CreateAndEditHostPage extends StatefulWidget {
   static const String pageName = 'Create And Edit';
@@ -28,10 +29,9 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
 
   SnmpVersion _snmpVersion = SnmpVersion.v2c;
 
-  List<DropdownMenuItem<SnmpVersion>> get _snmpVersionItem => const [
-        DropdownMenuItem(child: Text("v1"), value: SnmpVersion.v1),
-        DropdownMenuItem(child: Text("v2c"), value: SnmpVersion.v2c),
-      ];
+  List<DropdownMenuItem<SnmpVersion>> get _snmpVersionItem => SnmpVersion.values
+      .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
+      .toList();
 
   Widget _getInputForm() {
     var hostNameField = InputField(
@@ -60,7 +60,7 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
               _snmpVersion = value!;
             }));
 
-    var versionField = InputField.createPadding([
+    var versionField = WidgetTool.createPadding([
       const Text('Snmp Version :'),
       snmpVersionDropdown,
     ]);
