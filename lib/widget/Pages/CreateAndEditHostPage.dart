@@ -18,13 +18,20 @@ class CreateAndEditHostPage extends StatefulWidget {
 class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  int _hostId = -1;
   final TextEditingController _hostNameController = TextEditingController();
   final TextEditingController _ipController = TextEditingController();
   final TextEditingController _portController = TextEditingController();
-  final TextEditingController _versionController = TextEditingController();
   final TextEditingController _communityStringController =
       TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+
+  SnmpVersion _snmpVersion = SnmpVersion.v2c;
+
+  List<DropdownMenuItem<SnmpVersion>> get _snmpVersionItem => const [
+        DropdownMenuItem(child: Text("v1"), value: SnmpVersion.v1),
+        DropdownMenuItem(child: Text("v2c"), value: SnmpVersion.v2c),
+      ];
 
   Widget _getInputForm() {
     var hostNameField = InputField(
@@ -46,6 +53,18 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
     var portField = InputField(_portController, 'Port', false,
         hintText: '161', formatter: [FilteringTextInputFormatter.digitsOnly]);
 
+    var snmpVersionDropdown = DropdownButton(
+        value: _snmpVersion,
+        items: _snmpVersionItem,
+        onChanged: (SnmpVersion? value) => setState(() {
+              _snmpVersion = value!;
+            }));
+
+    var versionField = InputField.createPadding([
+      const Text('Snmp Version :'),
+      snmpVersionDropdown,
+    ]);
+
     var communityStringField = InputField(
       _communityStringController,
       'Community String',
@@ -62,6 +81,7 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
           hostNameField,
           ipField,
           portField,
+          versionField,
           communityStringField,
           noteField,
         ],
@@ -70,30 +90,33 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     dynamic params = ModalRoute.of(context)!.settings.arguments;
 
-    int editIndex = 0;
     if (params != null && params['hostId'] != null) {
       var hosts = StoreProvider.of<AppState>(context).state.hosts;
 
       var listIdx = hosts.indexWhere((x) => x.id == params['hostId']);
 
       var editorHost = hosts[listIdx];
-      editIndex = editorHost.id!;
+      _hostId = editorHost.id!;
 
       _hostNameController.text = editorHost.name!;
       _ipController.text = editorHost.ip!.address;
       _portController.text = editorHost.port.toString();
-      _versionController.text = '2';
+      _snmpVersion = editorHost.version;
       _communityStringController.text = editorHost.readCommunityString;
       _noteController.text = editorHost.note;
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text((editIndex >= 0 ? 'Edit ' : 'Create ') + 'Host'),
+          child: Text((_hostId >= 0 ? 'Edit ' : 'Create ') + 'Host'),
         ),
         actions: [
           IconButton(
@@ -102,20 +125,20 @@ class _CreateAndEditHostPage extends State<CreateAndEditHostPage> {
               if (!_formKey.currentState!.validate()) return;
 
               var h = HostModel();
-              h.id = editIndex;
+              h.id = _hostId;
               h.ip = InternetAddress.tryParse(_ipController.text);
               h.name = _hostNameController.text;
               h.port = _portController.text.isNotEmpty
                   ? int.parse(_portController.text)
                   : 161;
-              h.version = SnmpVersion.v2c;
+              h.version = _snmpVersion;
               h.readCommunityString = _communityStringController.text.isNotEmpty
                   ? _communityStringController.text
                   : 'public';
 
               h.note = _noteController.text;
 
-              if (editIndex >= 0) {
+              if (_hostId >= 0) {
                 StoreProvider.of<AppState>(context).dispatch(UpdateHostAction(h,
                     onComplete: () => Navigator.of(context).pop()));
               } else {

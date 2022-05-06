@@ -12,7 +12,7 @@ class InputField extends StatelessWidget {
   InputField(this.controller, this.title, this.isRequired,
       {this.hintText, this.formatter, this.validator});
 
-  Widget _createPadding(List<Widget> children) => Padding(
+  static Widget createPadding(List<Widget> children) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +56,6 @@ class InputField extends StatelessWidget {
 
     var titleWidget = Text(title + ' :');
 
-    return _createPadding([titleWidget, textField]);
+    return createPadding([titleWidget, textField]);
   }
 }
