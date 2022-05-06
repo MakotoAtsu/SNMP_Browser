@@ -5,7 +5,7 @@ import 'package:snmp_browser/model/HostModel.dart';
 
 class HostService {
   static Future<List<HostModel>> getAllHostFromDB() async {
-    await Future.delayed(const Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
 
     var allHosts = await AppDB().getAllHosts();
 

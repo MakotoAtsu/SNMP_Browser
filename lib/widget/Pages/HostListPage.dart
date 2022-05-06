@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:snmp_browser/model/HostModel.dart';
@@ -8,6 +9,7 @@ import 'package:snmp_browser/store/reducer/TargetReducer.dart';
 import 'package:snmp_browser/widget/Compoments/BottomNaviBar.dart';
 import 'package:snmp_browser/widget/Compoments/LoadingIcon.dart';
 import 'package:snmp_browser/widget/Pages/CreateAndEditHostPage.dart';
+import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 
 class HostListPage extends StatefulWidget {
   static const String pageName = 'Hosts';
@@ -31,6 +33,7 @@ class _HostListPage extends State<HostListPage> {
     var listTitle = ListTile(
         onTap: () {
           _store.dispatch(UpdateQueryTargetAction(model));
+          Navigator.of(context).pushReplacementNamed(QueryPage.pageRoute);
         },
         leading: const Icon(Icons.circle),
         title: hostName,

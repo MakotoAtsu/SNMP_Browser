@@ -6,16 +6,17 @@ import 'package:snmp_browser/widget/Pages/HostListPage.dart';
 import 'package:snmp_browser/widget/Pages/QueryPage.dart';
 
 class BottomNaviBar extends StatelessWidget {
-  final Map<String, BottomNavigationBarItem> _naviItems = const {
-    HostListPage.pageRoute: BottomNavigationBarItem(
+  final Map<String, BottomNavigationBarItem> _naviItems = {
+    HostListPage.pageRoute: const BottomNavigationBarItem(
       icon: Icon(Icons.format_list_numbered),
       label: 'Hosts',
     ),
+    // ignore: prefer_const_constructors
     QueryPage.pageRoute: BottomNavigationBarItem(
-      icon: Icon(Icons.search),
+      icon: const Icon(Icons.search),
       label: 'Query',
     ),
-    HistoryPage.pageRoute: BottomNavigationBarItem(
+    HistoryPage.pageRoute: const BottomNavigationBarItem(
       icon: Icon(Icons.history),
       label: 'History',
     ),
@@ -24,6 +25,19 @@ class BottomNaviBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? routeName = ModalRoute.of(context)!.settings.name;
+
+    var canQuery =
+        !StoreProvider.of<AppState>(context).state.queryTarget.isValid;
+
+    if (canQuery) {
+      _naviItems[QueryPage.pageRoute] = const BottomNavigationBarItem(
+        icon: Icon(
+          Icons.search,
+          color: Colors.black12,
+        ),
+        label: 'Query',
+      );
+    }
 
     int currentPageIndex = 0;
     if (routeName != null) {
@@ -38,9 +52,6 @@ class BottomNaviBar extends StatelessWidget {
       onTap: (newIdx) {
         if (newIdx == currentPageIndex) return;
         var newRoute = _naviItems.keys.toList()[newIdx];
-
-        var canQuery =
-            !StoreProvider.of<AppState>(context).state.queryTarget.isValid;
 
         if (newRoute == QueryPage.pageRoute && canQuery) {
           return;
