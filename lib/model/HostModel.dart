@@ -1,6 +1,5 @@
 import 'dart:io';
-
-enum SnmpVersion { v1, v2c, v3 }
+import 'SnmpModel.dart';
 
 class HostModel {
   int? id;

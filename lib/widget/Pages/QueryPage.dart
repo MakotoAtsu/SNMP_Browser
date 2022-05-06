@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/model/QueryResultModel.dart';
+import 'package:snmp_browser/model/SnmpModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
+import 'package:snmp_browser/store/reducer/HistoryReducer.dart';
 import 'package:snmp_browser/widget/Compoments/BottomNaviBar.dart';
 import 'package:snmp_browser/widget/Compoments/InputField.dart';
+import 'package:snmp_browser/widget/Compoments/LoadingIcon.dart';
 import 'package:snmp_browser/widget/Compoments/TopBar.dart';
 import 'package:snmp_browser/widget/Compoments/WidgetTool.dart';
-
-enum SnmpMethod {
-  get,
-  getNext,
-  // getBulk,
-}
 
 class QueryPage extends StatefulWidget {
   static const String pageName = 'Query';
@@ -23,8 +20,10 @@ class QueryPage extends StatefulWidget {
 }
 
 class _QueryPage extends State<QueryPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _oidController = TextEditingController();
   SnmpMethod _snmpMethod = SnmpMethod.getNext;
+  bool _isLoading = false;
 
   List<DropdownMenuItem<SnmpMethod>> get _snmpVersionItem => SnmpMethod.values
       .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
@@ -54,11 +53,46 @@ class _QueryPage extends State<QueryPage> {
   }
 
   Widget _createSearchButton() {
+    var store = StoreProvider.of<AppState>(context);
+
     var button = WidgetTool.createPadding([
       FloatingActionButton.extended(
+        backgroundColor: _isLoading ? Colors.grey : null,
         icon: const Icon(Icons.search),
         label: const Text('Query'),
-        onPressed: () {},
+        onPressed: _isLoading
+            ? null
+            : () {
+                if (!_formKey.currentState!.validate()) return;
+
+                store.dispatch(QuerySnmpAction(
+                  _oidController.text,
+                  _snmpMethod,
+                  onExecuting: () => setState(() {
+                    _isLoading = true;
+                  }),
+                  onComplete: () => setState(() {
+                    _isLoading = false;
+                  }),
+                  onError: (e) {
+                    String? errMsg;
+                    try {
+                      e.message;
+                    } catch (e) {
+                      // Do nothing
+                    }
+
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(errMsg ?? 'Oops! Somthing wrong..'),
+                      duration: const Duration(seconds: 5),
+                    ));
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                ));
+              },
       )
     ]);
 
@@ -94,7 +128,8 @@ class _QueryPage extends State<QueryPage> {
           ]),
     );
 
-    return card;
+    var form = Form(key: _formKey, child: card);
+    return form;
   }
 
   Widget _createResultPanel(QueryResultModel result) => ListTile(
@@ -111,11 +146,15 @@ class _QueryPage extends State<QueryPage> {
           appBar: TopBar(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _createHostPanel(context),
               _createSearchPanel(),
-              (result == null ? const Spacer() : _createResultPanel(result)),
+              const Spacer(),
+              _isLoading
+                  ? LoadingIcon()
+                  : (result == null
+                      ? const Spacer()
+                      : _createResultPanel(result)),
               const Spacer(),
               Center(child: _createSearchButton()),
             ],

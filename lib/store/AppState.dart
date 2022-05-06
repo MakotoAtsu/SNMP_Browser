@@ -6,6 +6,7 @@ import 'package:snmp_browser/store/middleware/DeleteHostMiddleware.dart';
 import 'package:snmp_browser/store/middleware/UpdateHostMiddleware.dart';
 import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 import 'middleware/FetchHostsMiddleware.dart';
+import 'middleware/QuerySnmpMiddleware.dart';
 import 'reducer/HistoryReducer.dart';
 import 'reducer/TargetReducer.dart';
 
@@ -20,6 +21,7 @@ class AppState {
 }
 
 List<Middleware<AppState>> getAllMiddleware = [
+  QuerySnmpMiddleware(),
   FetchHostsMiddleware(),
   DeleteHostMiddleware(),
   UpdateHostMiddleware(),

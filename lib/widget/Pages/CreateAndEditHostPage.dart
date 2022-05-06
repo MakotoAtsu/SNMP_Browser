@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:snmp_browser/model/HostModel.dart';
+import 'package:snmp_browser/model/SnmpModel.dart';
 import 'package:snmp_browser/store/AppState.dart';
 import 'package:snmp_browser/store/reducer/HostsReducer.dart';
 import 'package:snmp_browser/widget/Compoments/InputField.dart';

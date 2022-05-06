@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:snmp_browser/database/AppDB.dart';
 import 'package:snmp_browser/model/HostModel.dart';
+import 'package:snmp_browser/model/SnmpModel.dart';
 
 class HostService {
   static Future<List<HostModel>> getAllHostFromDB() async {

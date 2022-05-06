@@ -33,13 +33,13 @@ class HistoryPage extends StatelessWidget {
     var session = await Snmp.createSession(InternetAddress("172.24.54.28"));
     var result = await session.getNext(Oid.fromString("1.3.6.1.2"));
 
-    var action = AppendQueryResultAction(QueryResultModel(
-      result.pdu.varbinds[0].oid.toString(),
-      result.pdu.varbinds[0].tag,
-      result.pdu.varbinds[0].value,
-    ));
+    // var action = querySnmpAction(QueryResultModel(
+    //   result.pdu.varbinds[0].oid.toString(),
+    //   result.pdu.varbinds[0].tag,
+    //   result.pdu.varbinds[0].value,
+    // ));
 
-    store.dispatch(action);
+    // store.dispatch(action);
   }
 
   @override
