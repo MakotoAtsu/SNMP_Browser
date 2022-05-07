@@ -5,7 +5,7 @@ import 'package:snmp_browser/store/reducer/interface/AsyncAction.dart';
 
 // Action
 class QuerySnmpAction extends AsyncAction {
-  late final List<QueryResultModel> items;
+  List<QueryResultModel> items = [];
   final String oid;
   final SnmpMethod method;
   QuerySnmpAction(this.oid, this.method,
