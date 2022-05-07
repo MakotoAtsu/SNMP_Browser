@@ -21,13 +21,32 @@ class QueryPage extends StatefulWidget {
 
 class _QueryPage extends State<QueryPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _oidController = TextEditingController();
+  final TextEditingController _oidController = TextEditingController()
+    ..text = '1.3';
   SnmpMethod _snmpMethod = SnmpMethod.getNext;
   bool _isLoading = false;
 
   List<DropdownMenuItem<SnmpMethod>> get _snmpVersionItem => SnmpMethod.values
       .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
       .toList();
+
+  void _catchQueryError(e) {
+    String? errMsg;
+    try {
+      errMsg = e.message;
+    } catch (e) {
+      // Do nothing
+    }
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text((errMsg ?? 'Oops! Somthing wrong') + '...'),
+      duration: const Duration(seconds: 5),
+    ));
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   Widget _createHostPanel(BuildContext context) {
     var currentHost = StoreProvider.of<AppState>(context).state.queryTarget;
@@ -65,32 +84,19 @@ class _QueryPage extends State<QueryPage> {
             : () {
                 if (!_formKey.currentState!.validate()) return;
 
-                store.dispatch(QuerySnmpAction(
+                var result = store.dispatch(QuerySnmpAction(
                   _oidController.text,
                   _snmpMethod,
                   onExecuting: () => setState(() {
                     _isLoading = true;
                   }),
-                  onComplete: () => setState(() {
+                  onComplete: (result) => setState(() {
+                    if (result is QueryResultModel) {
+                      _oidController.text = result.oid;
+                    }
                     _isLoading = false;
                   }),
-                  onError: (e) {
-                    String? errMsg;
-                    try {
-                      e.message;
-                    } catch (e) {
-                      // Do nothing
-                    }
-
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(errMsg ?? 'Oops! Somthing wrong..'),
-                      duration: const Duration(seconds: 5),
-                    ));
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
+                  onError: (e) => _catchQueryError(e),
                 ));
               },
       )

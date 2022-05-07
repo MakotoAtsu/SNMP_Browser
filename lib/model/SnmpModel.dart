@@ -1,6 +1,7 @@
 enum SnmpMethod {
   get,
   getNext,
+  walk,
   // getBulk,
 }
 
