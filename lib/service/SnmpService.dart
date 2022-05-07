@@ -4,34 +4,38 @@ import 'package:snmp_browser/model/QueryResultModel.dart';
 import 'package:snmp_browser/model/SnmpModel.dart';
 
 class SnmpService {
+  static Snmp? session;
+
   static Future<List<QueryResultModel>> querySnmpData(
     HostModel host,
     String oid,
     SnmpMethod method,
   ) async {
     Oid _oid = Oid.fromString(oid);
-    var session = await Snmp.createSession(host.ip!);
+    session ??= await Snmp.createSession(host.ip!);
 
+    if (session!.target != host.ip) {
+      session = await Snmp.createSession(host.ip!);
+    }
     List<QueryResultModel> result;
 
     switch (method) {
       case SnmpMethod.get:
-        var response = await session.get(_oid);
+        var response = await session!.get(_oid);
 
-        result = response.pdu.varbinds
-            .map((e) => QueryResultModel.fromVarbind(e))
-            .toList();
-        break;
-      case SnmpMethod.getNext:
-        var response = await session.getNext(_oid);
         result = response.pdu.varbinds
             .map((e) => QueryResultModel.fromVarbind(e))
             .toList();
         break;
 
       case SnmpMethod.walk:
-        result = await _walk(session, _oid);
+      case SnmpMethod.getNext:
+        var response = await session!.getNext(_oid);
+        result = response.pdu.varbinds
+            .map((e) => QueryResultModel.fromVarbind(e))
+            .toList();
         break;
+
       default:
         throw Exception('Snmp method not support');
     }

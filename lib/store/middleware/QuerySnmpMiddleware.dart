@@ -21,7 +21,7 @@ class QuerySnmpMiddleware extends MiddlewareClass<AppState> {
         return;
       }
       next(action);
-      // return action.items.last;
+      return action.items.last;
     }
 
     next(action);
