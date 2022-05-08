@@ -16,7 +16,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPage extends State<HistoryPage> {
-  late final Store<AppState> store;
+  late Store<AppState> store;
 
   final ScrollController _scrollController = ScrollController();
 

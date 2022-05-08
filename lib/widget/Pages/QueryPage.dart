@@ -24,7 +24,6 @@ class _QueryPage extends State<QueryPage> {
   final TextEditingController _oidController = TextEditingController()
     ..text = '1.3';
   SnmpMethod _snmpMethod = SnmpMethod.getNext;
-  bool _isLoading = false;
 
   List<DropdownMenuItem<SnmpMethod>> get _snmpVersionItem => SnmpMethod.values
       .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
@@ -43,13 +42,11 @@ class _QueryPage extends State<QueryPage> {
       content: Text((errMsg ?? 'Oops! Somthing wrong') + '...'),
       duration: const Duration(seconds: 5),
     ));
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Widget _createHostPanel(BuildContext context) {
-    var currentHost = StoreProvider.of<AppState>(context).state.queryTarget;
+    var currentHost =
+        StoreProvider.of<AppState>(context).state.queryPageStatus.queryTarget;
 
     var hostPanel = ListTile(
       contentPadding: const EdgeInsets.fromLTRB(30, 16, 30, 0),
@@ -74,6 +71,8 @@ class _QueryPage extends State<QueryPage> {
   Widget _createSearchButton() {
     var store = StoreProvider.of<AppState>(context);
 
+    var _isLoading = store.state.queryPageStatus.isBusy;
+
     var button = WidgetTool.createPadding([
       FloatingActionButton.extended(
         backgroundColor: _isLoading ? Colors.grey : null,
@@ -84,7 +83,7 @@ class _QueryPage extends State<QueryPage> {
             : () {
                 if (!_formKey.currentState!.validate()) return;
 
-                var result = store.dispatch(QuerySnmpAction(
+                store.dispatch(QuerySnmpAction(
                   _oidController.text,
                   _snmpMethod,
                   onExecuting: () => setState(() {
@@ -145,9 +144,8 @@ class _QueryPage extends State<QueryPage> {
 
   @override
   Widget build(BuildContext context) {
-    var connector = StoreConnector<AppState, QueryResultModel?>(
-      converter: (store) => store.state.histories.lastOrNull,
-      builder: (context, result) {
+    var connector = StoreBuilder<AppState>(
+      builder: (context, store) {
         return Scaffold(
           appBar: TopBar(),
           body: Column(
@@ -156,11 +154,11 @@ class _QueryPage extends State<QueryPage> {
               _createHostPanel(context),
               _createSearchPanel(),
               const Spacer(),
-              _isLoading
+              store.state.queryPageStatus.isBusy
                   ? LoadingIcon()
-                  : (result == null
+                  : (store.state.histories.isEmpty
                       ? const Spacer()
-                      : _createResultPanel(result)),
+                      : _createResultPanel(store.state.histories.last)),
               const Spacer(),
               Center(child: _createSearchButton()),
             ],
